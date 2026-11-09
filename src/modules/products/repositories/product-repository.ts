@@ -97,7 +97,12 @@ export class ProductRepository implements IProductRepository{
             return data  as typePhotoProductErp[]
     } 
    
-
+/**
+ *  -Consulta o estoque, preço e demais dados do produto
+ *  -Compara data de recadastro do produto, preco e estoque 
+ * @param pricesTable Codigo da tabela de precos
+ * @returns 
+ */
   async  getProductUpdatedAt(   pricesTable?:number): Promise<resultQueryProduct[]> {
         const codPricesTable =  pricesTable ? pricesTable : 1;
             const sql = `SELECT
@@ -151,6 +156,7 @@ export class ProductRepository implements IProductRepository{
                 WHERE P.ATIVO = 'S' AND
                   p.DATA_RECAD >= it.ultimo_envio_produto
                   OR EST.DATA_RECAD >= it.ultimo_envio_produto
+                  OR pp.DATA_RECAD >= it.ultimo_envio_produto
                 group by p.CODIGO` 
                 const [result] = await this.connection.query(sql);
                 return result as resultQueryProduct[];
