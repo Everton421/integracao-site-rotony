@@ -157,7 +157,6 @@ export class ProductRepository implements IProductRepository{
                   OR EST.DATA_RECAD >= it.ultimo_envio_produto
                   OR pp.DATA_RECAD >= it.ultimo_envio_produto
                 group by p.CODIGO` 
-                console.log(sql)
                 const [result] = await this.connection.query(sql);
                 return result as resultQueryProduct[];
     }
