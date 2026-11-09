@@ -28,7 +28,7 @@ export interface IProductApi{
             sku: string,
             description: string,
             category: string[],
-            brand :  string,
+            brand? :  string,
             price: number,
             inStock: boolean,
             images: string[],
@@ -68,9 +68,8 @@ export interface IProductApi{
             }
     }
     private productDTO(product: resultQueryProduct, categories: string[], imagesToSend: string[]):IProductApi {
-        return{
-              brand: product.MARCA || '',
-                                category:  categories,
+                let payload:IProductApi = {
+                              category:  categories,
                                 description: product.APLICACAO_SITE || product.APLICACAO,
                                 name: product.TITULO_SITE || product.DESCRICAO,
                                 externalId: String(product.CODIGO),
@@ -78,8 +77,13 @@ export interface IProductApi{
                                 price:  Number(product.PRECO),
                                 images:imagesToSend,
                                 sku: String(product.CODIGO)
-        }
+                }
+                if(  product.MARCA ){
+                    payload.brand = product.MARCA; 
+                }
+                return  payload    
     }
+
     private async configurePayload(codigo?:number){
       const fn = codigo ? this.productRepository.getProduct( codigo )
                         : 
