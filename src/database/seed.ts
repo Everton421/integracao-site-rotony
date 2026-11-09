@@ -17,7 +17,7 @@ export async function seed(){
              `,
              `
              INSERT IGNORE INTO ${database_integration}.tokens ( id , token , token_type , expires_in , expires_at)
-              VALUES (1,'','Bearer',1000,'NOW()' );
+              VALUES (1,'','Bearer',1000, NOW()  );
              `,
              `
              CREATE TABLE  IF NOT EXISTS ${database_integration}.timestamps  (
@@ -26,7 +26,7 @@ export async function seed(){
                     PRIMARY KEY ( id )
                     ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
              `,
-                ` INSERT IGNORE INTO ${database_integration}.timestamps (id , ultimo_envio_produto)   VALUES ( 1, 'NOW()' );  `,
+                ` INSERT IGNORE INTO ${database_integration}.timestamps (id , ultimo_envio_produto)   VALUES ( 1, NOW() );  `,
              
              `CREATE TABLE IF NOT EXISTS ${database_integration}.logs  (
                  id  int(11) NOT NULL AUTO_INCREMENT,
