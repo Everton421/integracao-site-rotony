@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+</head>
+
+<body>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/">INTERSIG</a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Include -->
+            <%- include('../components/sidebar', { activePage: 'configuracoes' }) %>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+                
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Configuracoes de Integracao</h1>
+                </div>
+
+                <!-- ALERTA DE SUCESSO -->
+                <% if (typeof msgSucesso !== 'undefined' && msgSucesso) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+                        <span data-feather="check-circle"></span> Configurações atualizadas com sucesso!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+
+                <!-- ALERTA DE ERRO -->
+                <% if (typeof msgErro !== 'undefined' && msgErro) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span data-feather="alert-triangle"></span> Erro ao salvar configurações.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+
+                <!-- INÍCIO DO FORMULÁRIO -->
+                <form action="/ajusteConfig" method="POST">
+                    
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+                        
+                        <!-- CARD PRODUTOS -->
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><span data-feather="package" class="me-2"></span>Produtos</h5>
+                                    <p class="card-text text-muted small">Envio para o catalogo Rotony</p>
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="enviar_produtos" value="S" id="prodSim"
+                                            <%= (dados.enviar_produtos === 'S') ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="prodSim">Enviar produtos.</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="enviar_produtos" value="N" id="prodNao"
+                                            <%= (dados.enviar_produtos === 'N') ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="prodNao">Nao enviar produtos.</label>
+                                    </div>
+
+                                    <hr>
+                                    <p class="card-text text-muted small">Atualizar produtos ja enviados</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atualizar_produtos" value="S" id="atualizarSim"
+                                            <%= (dados.atualizar_produtos === 'S') ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="atualizarSim">Sim</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atualizar_produtos" value="N" id="atualizarNao"
+                                            <%= (dados.atualizar_produtos === 'N') ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="atualizarNao">Nao</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD IMAGENS -->
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><span data-feather="image" class="me-2"></span>Imagens</h5>
+                                    <p class="card-text text-muted small">Envio de imagens para o catalogo</p>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="enviar_imagens" value="S" id="imgSim"
+                                            <%= (dados.enviar_imagens === 'S') ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="imgSim">Enviar imagens.</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="enviar_imagens" value="N" id="imgNao"
+                                            <%= (dados.enviar_imagens === 'N') ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="imgNao">Nao enviar imagens.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD PREÇOS -->
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><span data-feather="dollar-sign" class="me-2"></span>Precos</h5>
+                                    <p class="card-text text-muted small">Tabela de precos do ERP</p>
+
+                                    <div class="mt-3">
+                                        <label class="form-label">Tabela de Preco</label>
+                                        <select class="form-select" name="tabela_preco">
+                                            <% if(tabelas && tabelas.length > 0){ tabelas.forEach((i)=>{ %> 
+                                                <option value="<%= i.CODIGO %>" <%= (String(dados.tabela_preco) === String(i.CODIGO)) ? 'selected' : '' %>>
+                                                Cod: <%= i.CODIGO %> | <%= i.DESCRICAO %>
+                                                </option>
+                                            <% })} %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <!--  <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary"><span data-feather="dollar-sign" class="me-2"></span>Forma de pagamento</h5>
+                                    <p class="card-text text-muted small">Forma de pagamento padrão no recebimento do pedido</p>
+
+                                     
+                                     <div class="mt-3">
+                                         <% if( formas_pagamento &&  formas_pagamento.length > 0){  formas_pagamento.forEach((i)=>{ %> 
+                                             <label class="form-label">Forma de pagamento: <%= dados.forma_pagamento === i.CODIGO  ? i.DESCRICAO : '' %> </label>
+                                            <% })} %>
+                                        <select class="form-select" name="forma_pagamento" <%= (dados.forma_pagamento === '0') ? 'disabled' : '' %>>
+                                            <% if( formas_pagamento &&  formas_pagamento.length > 0){  formas_pagamento.forEach((i)=>{ %> 
+                                                <option value="<%= i.CODIGO %>" <%= (dados.forma_pagamento === i.CODIGO) ? 'selected' : '' %>>
+                                                    <%= i.DESCRICAO %>
+                                                </option>
+                                            <% })} %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    -->
+                    </div> <!-- Fim Row Cards -->
+
+                    <!-- BOTÃO FLUTUANTE OU FIXO -->
+                    <div class="fixed-bottom bg-white border-top p-3 d-flex justify-content-end" style="z-index: 1000; margin-left: 240px;"> <!-- Ajuste margin-left conforme sua sidebar -->
+                        <button type="submit" class="btn btn-primary btn-lg px-5 shadow">
+                            <span data-feather="save"></span> Salvar Alteracoes
+                        </button>
+                    </div>
+
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        feather.replace();
+
+        // Opcional: Remover o alerta da URL para que se o usuário der F5 não apareça novamente
+        if (window.history.replaceState) {
+            const url = new URL(window.location);
+            if(url.searchParams.get('sucesso') || url.searchParams.get('erro')){
+                url.searchParams.delete('sucesso');
+                url.searchParams.delete('erro');
+                window.history.replaceState(null, '', url);
+            }
+        }
+        
+        // Auto-hide alert após 5 segundos
+        setTimeout(function() {
+            let alert = document.getElementById('successAlert');
+            if (alert) {
+                let bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

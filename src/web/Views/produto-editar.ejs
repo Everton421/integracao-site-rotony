@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto <%= produto.CODIGO %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <style>
+        .form-label { font-weight: 500; }
+        .card-header { background-color: #f8f9fa; font-weight: bold; }
+
+        /* ESTILOS DO CARROSSEL DE PREVIEW */
+        .carousel-preview-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px;
+            background: #fff;
+            border: 1px dashed #dee2e6;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            min-height: 120px;
+            align-items: center;
+        }
+
+        /* Estilização da barra de rolagem para ficar mais bonita */
+        .carousel-preview-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .carousel-preview-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .carousel-preview-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .preview-card {
+            flex: 0 0 auto;
+            width: 100px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .preview-img-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+
+        .preview-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-number {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            color: #6c757d;
+            font-weight: bold;
+        }
+
+        /* Placeholder quando não tem imagem */
+        .img-placeholder {
+            color: #adb5bd;
+        }
+
+
+        /* Quando a linha estiver desmarcada (não enviar) */
+        .img-row-inactive .form-control {
+            background-color: #e9ecef;
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+
+        .preview-card.inactive {
+            opacity: 0.4; /* Deixa a miniatura "apagada" */
+            filter: grayscale(100%);
+        }
+
+        .chk-ativo {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+      </style>
+</head>
+
+<body class="bg-light">
+    
+ 
+    <div class="container mt-5 mb-5">
+        
+        <!-- Breadcrumb / Voltar -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/produtos" class="btn btn-outline-secondary">
+                <span data-feather="arrow-left"></span> Voltar para Lista
+            </a>
+            <h2 class="h4">Detalhes do Produto: <span class="text-primary"><%= produto.CODIGO %></span></h2>
+        </div>
+
+        <form id="formEditarProduto">
+            <!-- DADOS OCULTOS IMPORTANTES -->
+            <input type="hidden" name="CODIGO" value="<%= produto.CODIGO %>">
+            <input type="hidden" name="id_produto_pai" value="<%= produto.id_produto_pai || '' %>">
+            <input type="hidden" name="variante_id" value="<%= produto.variante_id || '' %>">
+
+            <div class="row">
+                <!-- COLUNA DA ESQUERDA -->
+                <div class="col-md-8">
+                    
+                    <!-- Card: Informações Principais -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">Informações Básicas</div>
+                             <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Título do Produto (Shopify)</label>
+                                <input type="text" class="form-control" name="DESCRICAO" 
+                                       value="<%= produto.TITULO_SITE || produto.DESCRICAO  %>" required>
+                                <div class="form-text">Este é o nome que aparecerá na loja.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Descrição HTML</label>
+                                <textarea class="form-control" name="APLICACAO" rows="8"><%=produto.APLICACAO_SITE  ||  produto.DESCR_CURTA_SITE ||  produto.DESCR_LONGA_SITE || produto.APLICACAO  %></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card: Detalhes Técnicos -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">Detalhes Técnicos (ERP)</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Marca</label>
+                                    <input type="text" class="form-control" name="MARCA" value="<%= produto.MARCA %>">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Categoria</label>
+                                    <input type="text" class="form-control" name="CATEGORIA" value="<%= produto.CATEGORIA %>">
+                                </div>
+                                  <div class="col-md-6 mb-3">
+                                    <label class="form-label">SubCategoria</label>
+                                    <input type="text" class="form-control" name="SUBCATEGORIA" value="<%= produto.SUBCATEGORIA %>">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">NCM</label>
+                                    <input type="text" class="form-control" name="NCM" value="<%= produto.NCM %>"  >
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Origem</label>
+                                    <input type="number" class="form-control" name="ORIGEM" value="<%= produto.ORIGEM %>"  >
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Garantia (Meses)</label>
+                                    <input type="number" class="form-control" name="GARANTIA"  value="<%= Number.parseInt(produto.GARANTIA) %>"  >
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label"> Peso (KG)</label>
+                                    <input type="number" type="" class="form-control" name="PESO" value="<%= Number.parseFloat(produto.PESO).toFixed(2) %>"    >
+                                </div>
+                                 <div class="col-md-4 mb-3">
+                                    <label class="form-label"> Altura (cm)</label>
+                                    <input type="number"   class="form-control" name="ALTURA" value="<%= Number.parseFloat(produto.ALTURA).toFixed(2)  %>"    >
+                                </div>
+                                 <div class="col-md-4 mb-3">
+                                    <label class="form-label"> Largura (cm)</label>
+                                    <input  class="form-control" name="LARGURA" value="<%=  Number.parseFloat(produto.LARGURA).toFixed(2) %>"    >
+                                </div>
+                              <div class="col-md-4 mb-3">
+                                    <label class="form-label"> Comprimento (cm)</label>
+                                    <input  class="form-control" name="COMPRIMENTO" value="<%= Number.parseFloat(produto.COMPRIMENTO).toFixed(2) %>"    >
+                                </div>
+
+                              <div class="col-md-4 mb-3">
+                                    <label class="form-label"> Data recadastro  </label>
+                                    <input  class="form-control" name="DATA_RECAD" value="<%= produto.DATA_RECAD %>"    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card: Imagens do Produto (ATUALIZADO) -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Imagens do Produto</span>
+                    <div>
+                        <!-- Input de arquivo oculto -->
+                        <input type="file" id="fileInputUpload" accept="image/*"   multiple>
+                        
+                        <!-- Botão para acionar o input file -->
+                        <button type="button" class="btn btn-sm btn-primary me-2" id="btnUploadPC" disabled>
+                            <span data-feather="upload"></span> Upload do PC
+                        </button>
+
+                        <!-- Botão para adicionar URL manual -->
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="btnAdicionarUrl" disabled>
+                            <span data-feather="link"></span> Add Link
+                        </button>
+                    </div>
+                </div>
+                        <div class="card-body">
+                            
+                            <!-- ÁREA DO CARROSSEL DE PREVIEW -->
+                            <h6 class="text-muted small mb-2">Pré-visualização:</h6>
+                            <div id="previewCarousel" class="carousel-preview-container">
+                                <p class="text-muted small m-auto fst-italic" id="msgSemPreview">Adicione URLs abaixo para visualizar.</p>
+                                <!-- As miniaturas entrarão aqui -->
+                            </div>
+
+                            <hr>
+
+                            <!-- Inputs de URL -->
+                            <div id="containerImagens">
+                                <!-- As linhas de input serão inseridas aqui via JS -->
+                                <p class="text-muted small fst-italic" id="msgSemImagens">Nenhuma linha de imagem adicionada.</p>
+                            </div>
+                            
+                            <div class="form-text mt-2">
+                                A primeira imagem (da esquerda) será a capa. Cole o link direto da imagem.
+                            </div>
+                        </div>
+
+
+                        <div class="card-body">
+                            
+                            <!-- ÁREA DO CARROSSEL DE PREVIEW -->
+                            <h6 class="text-muted small mb-2">Pré-visualização:</h6>
+                            <div id="previewCarousel" class="carousel-preview-container">
+                                <p class="text-muted small m-auto fst-italic" id="msgSemPreview">Adicione URLs abaixo para visualizar.</p>
+                                <!-- As miniaturas entrarão aqui -->
+                         
+                                
+                            </div>
+
+                            <hr>
+
+                            <!-- Inputs de URL -->
+                            <div id="containerImagens">
+                                <!-- As linhas de input serão inseridas aqui via JS -->
+                                <p class="text-muted small fst-italic" id="msgSemImagens">Nenhuma linha de imagem adicionada.</p>
+                            </div>
+                            
+                            <div class="form-text mt-2">
+                                A primeira imagem (da esquerda) será a capa. Cole o link direto da imagem.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- COLUNA DA DIREITA (Preço, Estoque, Status) -->
+                <div class="col-md-4">
+                    
+                    <!-- Card: Status da Sincronização -->
+                    <div class="card mb-4 shadow-sm border-<%= produto.id_produto_pai ? 'success' : 'secondary' %>">
+                        <div class="card-header bg-<%= produto.id_produto_pai ? 'success' : 'secondary' %> text-white">
+                            Status da Integração
+                        </div>
+                        <div class="card-body">
+                            <% if(produto.id_produto_pai) { %>
+                                <p class="text-success fw-bold"><span data-feather="check-circle"></span> Sincronizado</p>
+                                <small class="text-muted">Shopify ID: <%= produto.id_produto_pai %></small><br>
+                                  <% if(produto.variante_id) { %>
+                                     <small class="text-muted">ID Variante: <%= produto.variante_id %></small>
+                                  <% } %>
+                            <% } else { %>
+                                <p class="text-secondary fw-bold"><span data-feather="alert-circle"></span> Não Enviado</p>
+                                <small>O produto será criado ao salvar.</small>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Card: Oferta -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">Preço e Estoque</div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Preço de Venda (R$)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" step="0.01" class="form-control" name="PRECO" 
+                                           value="<%= Number.parseFloat(produto.PRECO).toFixed(2) %>"  >
+                                </div>
+                            </div>
+                              <div class="mb-3">
+                                <label class="form-label">Promoção (R$)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" step="0.01" class="form-control" name="PROMOCAO" 
+                                           value="<%= Number.parseFloat(produto.PROMOCAO).toFixed(2) %>"  >
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Estoque para Envio</label>
+                                <input type="number" class="form-control" name="ESTOQUE" 
+                                       value="<%= produto.saldo_enviado || 0 %>">
+                                <div class="form-text">Ajuste manual antes de enviar.</div>
+                            </div>
+
+                            <hr>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg" id="btnSalvar">
+                                    <span data-feather="send"></span> 
+                                    <%= produto.id_produto_pai ? 'Atualizar na Shopify' : 'Enviar para Shopify' %>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+<script>
+    feather.replace();
+
+    $(document).ready(function() {
+        
+        const $containerInputs = $('#containerImagens');
+        const $containerPreview = $('#previewCarousel');
+        const $msgVaziaInput = $('#msgSemImagens');
+        const $msgVaziaPreview = $('#msgSemPreview');
+        const $fileInput = $('#fileInputUpload');
+
+ function adicionarLinhaImagem(conteudo, isBase64 = false, ativo = 'S', idPostgres = null) {
+    $msgVaziaInput.hide();
+    $msgVaziaPreview.hide();
+    
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    const isChecked = (ativo === 'S') ? 'checked' : '';
+    const rowClass = (ativo === 'S') ? '' : 'img-row-inactive';
+    const previewClass = (ativo === 'S') ? '' : 'inactive';
+
+    // Se for Base64 (Postgres ou Upload), mostramos um texto amigável
+    // Se for URL (MySQL), mostramos o link
+    const valorVisual = isBase64 ? '(Imagem do ERP - Pronta para sincronizar)' : conteudo;
+    
+    const htmlInput = `
+        <div class="input-group mb-2 ${rowClass}" id="row-${id}">
+            <div class="input-group-text bg-white">
+                <!-- O CHECKBOX É ESSENCIAL PARA O SUBMIT FUNCIONAR -->
+                <input class="form-check-input mt-0 chk-ativo" type="checkbox" data-target="${id}" ${isChecked}>
+            </div>
+            <span class="input-group-text">
+                <span data-feather="${isBase64 ? 'database' : 'link'}"></span>
+            </span>
+            
+            <input type="text" class="form-control" value="${valorVisual}" disabled style="background-color: #fff;">
+            
+            <input type="hidden" class="input-imagem-value" id="val-${id}" value="${conteudo}">
+            <input type="hidden" class="input-imagem-type" id="type-${id}" value="${isBase64 ? 'base64' : 'url'}">
+            <input type="hidden" class="input-id-postgres" id="pgid-${id}" value="${idPostgres || ''}">
+
+            <button type="button" class="btn btn-outline-danger btn-remove-img" data-target="${id}">
+                <span data-feather="trash-2"></span>
+            </button>
+        </div>
+    `;
+    $containerInputs.append(htmlInput);
+
+    const htmlPreview = `
+        <div class="preview-card ${previewClass}" id="preview-${id}">
+            <div class="preview-img-box">
+                <img src="${conteudo}" style="display:block;">
+            </div>
+            <div class="preview-number small">${isBase64 ? 'ERP/PG' : 'Link'}</div>
+        </div>
+    `;
+    $containerPreview.append(htmlPreview);
+    feather.replace();
+}
+
+        // 1. Botão Upload do PC (Clica no input hidden)
+        $('#btnUploadPC').click(function() {
+            $fileInput.click();
+        });
+
+        // 2. Quando o usuário seleciona arquivos
+        $fileInput.change(function(event) {
+            const files = event.target.files;
+            if (files && files.length > 0) {
+                // Processa cada arquivo selecionado
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const base64Result = e.target.result; // Aqui está sua string Base64
+                        adicionarLinhaImagem(base64Result, true, 'S');
+                    }
+                    
+                    reader.readAsDataURL(file); // Converte para Base64
+                });
+            }
+            // Limpa o input para permitir selecionar a mesma foto novamente se quiser
+            $(this).val('');
+        });
+
+        // 3. Botão Adicionar URL Manual
+        $('#btnAdicionarUrl').click(function() {
+            const url = prompt("Cole a URL da imagem:");
+            if(url) adicionarLinhaImagem(url, false, 'S');
+        });
+
+        // Remove imagem
+        $containerInputs.on('click', '.btn-remove-img', function() {
+            const id = $(this).data('target');
+            $(`#row-${id}`).remove();
+            $(`#preview-${id}`).remove();
+        });
+
+        // Checkbox Ativo/Inativo
+        $containerInputs.on('change', '.chk-ativo', function() {
+            const id = $(this).data('target');
+            const isChecked = $(this).is(':checked');
+            if(isChecked) {
+                $(`#row-${id}`).removeClass('img-row-inactive');
+                $(`#preview-${id}`).removeClass('inactive');
+            } else {
+                $(`#row-${id}`).addClass('img-row-inactive');
+                $(`#preview-${id}`).addClass('inactive');
+            }
+        });
+
+      <% if (produto.IMAGENS && produto.IMAGENS.length > 0) { %>
+        const imagensSalvas = <%- JSON.stringify(produto.IMAGENS) %>;
+        imagensSalvas.forEach(img => {
+            // Se a origem for postgres, o conteúdo é o base64. Se for mysql, é o link.
+            adicionarLinhaImagem(img.link, img.origem === 'postgres', img.ativo, img.id_postgres);
+        });
+    <% } %>
+
+        // SUBMIT
+        $('#formEditarProduto').submit(async function(e) {
+            e.preventDefault();
+            const $btn = $('#btnSalvar');
+            const originalText = $btn.html();
+            $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Enviando...');
+
+            const formDataArray = $(this).serializeArray();
+            const payload = {};
+            formDataArray.forEach(field => { payload[field.name] = field.value; });
+            const listaImagens=[];
+
+         // No momento do SUBMIT (coleta dos dados)
+       $('.chk-ativo:checked').each(function() {
+            const id = $(this).data('target');
+            listaImagens.push({
+                conteudo: $(`#val-${id}`).val(),
+                tipo: $(`#type-${id}`).val(),
+                id_postgres: $(`#pgid-${id}`).val() // Enviar o ID para o controller
+            });
+        });
+
+            payload.IMAGENS_DATA = listaImagens; // Mudamos o nome para indicar que é objeto complexo
+            try {
+                    console.log(payload)
+                 const response = await $.ajax({
+                     url: '/produto/single-update',
+                     method: 'POST',
+                     contentType: 'application/json',
+                     data: JSON.stringify(payload)
+                 });
+                 alert("Salvo com sucesso!");
+                 window.location.reload();
+            } catch (err) {
+                console.error(err);
+                console.log("erro   ", err);
+
+                alert("Erro: " + (err.responseJSON?.message || err.statusText));
+            } finally {
+                $btn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!-- views/components/sidebar.ejs -->
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3 sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" aria-current="page" href="/">
+                    <span data-feather="home"></span>
+                    Painel Principal
+                </a>
+            </li>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                <span>Sincronizacoes</span>
+            </h6>
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'produtos' ? 'active' : '' %>" href="/produtos">
+                    <span data-feather="package"></span>
+                    Produtos
+                </a>
+            </li>
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+            <span>Configuracoes</span>
+        </h6>
+        <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+                <a class="nav-link <%= activePage === 'configuracoes' ? 'active' : '' %>" href="/configuracoes">
+                    <span data-feather="settings"></span>
+                    Configuracoes
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<style>
+      .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+      }
+      .sidebar-sticky {
+        position: relative;
+        top: 0;
+        height: calc(100vh - 48px);
+        padding-top: .5rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      .nav-link {
+        font-weight: 500;
+        color: #333;
+      }
+      .nav-link .feather {
+        margin-right: 4px;
+        color: #727272;
+      }
+      .nav-link.active {
+        color: #007bff;
+      }
+      .nav-link:hover .feather,
+      .nav-link.active .feather {
+        color: inherit;
+      }
+      .sidebar .nav-link {
+        display: flex;
+        align-items: center;
+      }
+      .sidebar .nav-link .feather {
+        width: 16px;
+        height: 16px;
+        vertical-align: text-bottom;
+        margin-right: 8px;
+      }
+    </style>
