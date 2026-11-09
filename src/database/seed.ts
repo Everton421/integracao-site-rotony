@@ -16,7 +16,19 @@ export async function seed(){
                 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
              `,
              `
-             CREATE TABLE IF NOT EXISTS ${database_integration}.logs  (
+             INSERT IGNORE INTO ${database_integration}.tokens ( id , token , token_type , expires_in , expires_at)
+              VALUES (1,'','Bearer',1000,'NOW()' );
+             `,
+             `
+             CREATE TABLE  IF NOT EXISTS timestamps  (
+                     id  int(11) NOT NULL AUTO_INCREMENT,
+                     ultimo_envio_produto  datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+                    PRIMARY KEY ( id )
+                    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+             `,
+                ` INSERT IGNORE INTO ${database_integration}.timestamps ultimo_envio_produto = 'NOW()';  `,
+             
+             `CREATE TABLE IF NOT EXISTS ${database_integration}.logs  (
                  id  int(11) NOT NULL AUTO_INCREMENT,
                  payload  blob DEFAULT NULL,
                  error  blob DEFAULT NULL,
