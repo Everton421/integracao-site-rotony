@@ -20,7 +20,7 @@ export async function seed(){
               VALUES (1,'','Bearer',1000,'NOW()' );
              `,
              `
-             CREATE TABLE  IF NOT EXISTS timestamps  (
+             CREATE TABLE  IF NOT EXISTS ${database_integration}.timestamps  (
                      id  int(11) NOT NULL AUTO_INCREMENT,
                      ultimo_envio_produto  datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
                     PRIMARY KEY ( id )
