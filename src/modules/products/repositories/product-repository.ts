@@ -48,7 +48,6 @@ export class ProductRepository implements IProductRepository{
                             fp.PRODUTO,
                             fp.SEQ,
                             fp.DESCRICAO,
-                            fp.LINK,
                             fp.id
                         FROM  ${this.databasePublico}.fotos_prod fp 
                         JOIN  ${this.databaseVendas}.parametros p on p.id = 1
@@ -70,7 +69,6 @@ export class ProductRepository implements IProductRepository{
                             fp.PRODUTO,
                             fp.SEQ,
                             fp.DESCRICAO,
-                            fp.LINK,
                             fp.id
                         FROM  ${this.databasePublico}.fotos_prod fp 
                         JOIN  ${this.databaseVendas}.parametros p on p.id = 1

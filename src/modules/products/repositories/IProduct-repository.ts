@@ -7,7 +7,7 @@ import { type ITimestamps } from "./product-repository.ts"
         PRODUTO:number
         SEQ: number 
         DESCRICAO:string 
-        LINK:string | null
+        LINK?:string | null
         id:number 
     }
 
