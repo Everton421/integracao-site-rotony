@@ -4,6 +4,7 @@ import {type resultQueryProduct, type IProductRepository } from "./repositories/
 import { type ILogRepository } from "./repositories/log-repository.ts";
 import { PhotosUtilities } from "./photos-utilities.ts";
 import { delay } from "../../shared/utils/delay.ts";
+import { DateService } from "../../shared/utils/date-service.ts";
 
 
 export interface IResponseCreate{
@@ -133,6 +134,8 @@ export interface IProductApi{
 
     
     async syncProductByCode(codigo?:number){
+        const dateService = new DateService();
+        const dataSync = dateService.obterDataHoraAtual(); 
 
         const dataToSend = await this.configurePayload(codigo);
         let CHUNK_SIZE = 100;
@@ -162,7 +165,7 @@ export interface IProductApi{
                 }
         }
 
-        await this.productRepository.updateTimestamps()
+        await this.productRepository.updateTimestamps(dataSync)
             }
 
     }

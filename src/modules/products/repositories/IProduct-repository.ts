@@ -33,5 +33,5 @@ import { type ITimestamps } from "./product-repository.ts"
         getTimestamps():Promise<ITimestamps[]>
         findPhotosProductbyParams( query: { product?:number, photoId?:number,sequency?:number }):Promise<typePhotoProductErp[]>
         findPhotosProductbyIds( ids: number[] ):Promise<typePhotoProductErp[]>
-        updateTimestamps():Promise<number>
+        updateTimestamps(now?:string):Promise<number>
     }

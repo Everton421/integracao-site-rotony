@@ -30,9 +30,10 @@ export class ProductRepository implements IProductRepository{
          const [result] = await this.connection.query(sql);
        return result as  ITimestamps[];
     }
-    async updateTimestamps():Promise<number>{
-        const sql = `UPDATE ${this.databaseIntegration}.timestamps SET  ultimo_envio_produto = NOW();`;
-         const [result] = await this.connection.query(sql);
+    async updateTimestamps(now?:string):Promise<number>{
+        const sql = `UPDATE ${this.databaseIntegration}.timestamps SET  ultimo_envio_produto = ?;`;
+
+         const [result] = await this.connection.query(sql, [ now ? now : 'NOW()']);
              const resultAffectedRows = result as ResultSetHeader;
             return resultAffectedRows.affectedRows;
     }
