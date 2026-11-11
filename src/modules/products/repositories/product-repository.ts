@@ -153,6 +153,7 @@ export class ProductRepository implements IProductRepository{
                     GROUP BY PO.PRODUTO
                 ) RES ON RES.PRODUTO = P.CODIGO
                 WHERE P.ATIVO = 'S' AND p.NO_SITE= 'S' AND
+                    p.MARCA  = 1 AND
                   p.DATA_RECAD >= it.ultimo_envio_produto
                   OR EST.DATA_RECAD >= it.ultimo_envio_produto
                   OR pp.DATA_RECAD >= it.ultimo_envio_produto

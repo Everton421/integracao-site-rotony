@@ -8,9 +8,8 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import { database_api } from './database/database-connection.ts';
 import { seed } from './database/seed.ts';
-import { router } from './web/routes.ts';
-import { SyncProductFactory } from './modules/products/sync-product-factory.ts';
 import { ProductJob } from './modules/products/sync-product-job.ts';
+import { router } from './web/routes.ts';
 
 const app = express();
 
@@ -31,13 +30,10 @@ if (!database_api) {
 await seed();
 app.use(router);
 
-
-
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof Error) {
         return res.status(400).json({ error: err.message });
     }
-
     return res.status(500).json({
         status: 'error',
         message: 'internal server error.'
@@ -46,8 +42,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
 const PORT_API = Number(process.env.PORT_API ?? 8000);
 
-     const syncProduct = await SyncProductFactory.createService();
-    const job= new ProductJob(syncProduct)
+    const job= new ProductJob()
 
     const expressao = process.env.ENVIO_PRODUTOS;
     if(expressao){

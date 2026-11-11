@@ -1,15 +1,12 @@
 import cron from 'node-cron';
 import { SyncProductService } from './sync-product-service.ts';
+import { SyncProductFactory } from './sync-product-factory.ts';
 
 export class ProductJob {
 
-    private syncProductService:SyncProductService;
-    
-    constructor(syncProductService:SyncProductService){
-        this.syncProductService=syncProductService
-    }
     
     async job(configCron: string) {
+        const service = await SyncProductFactory.createService();
 
         let inExec = false
         console.log('[V] Tarefa de envio de Produtos agendada com sucesso.')
@@ -24,8 +21,7 @@ export class ProductJob {
                 inExec = true
                 console.log('[V] Executando tarefa de envio de Produtos...')
 
-                await this.syncProductService.syncProductByCode();
-
+                await service.syncProductByCode();
 
             } catch (e) {
                 console.error('Erro no Job de Produtos:', e)
