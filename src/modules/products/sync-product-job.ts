@@ -6,12 +6,14 @@ export class ProductJob {
 
     
     async job(configCron: string) {
-        const service = await SyncProductFactory.createService();
 
         let inExec = false
         console.log('[V] Tarefa de envio de Produtos agendada com sucesso.')
 
         cron.schedule(configCron, async () => {
+
+        const service = await SyncProductFactory.createService();
+
             if (inExec) {
                 console.log('[X] Tarefa de envio de produtos ainda em execução.')
                 return
